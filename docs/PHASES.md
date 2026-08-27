@@ -21,6 +21,8 @@ Exit criteria:
 
 Goal: define the real platform data model before feature work.
 
+Status: applied to the live `The SparkHub` Supabase project on 2026-08-27.
+
 - Create Supabase migrations for profiles, roles, ideas, tags, categories, investment interests, connections, investments, notifications, reports, and storage buckets.
 - Enable RLS on exposed tables.
 - Add explicit grants where Data API exposure is required.
@@ -32,6 +34,13 @@ Exit criteria:
 - Migrations apply successfully.
 - RLS policies are reviewed table by table.
 - Basic test queries prove unauthorized users cannot read private data.
+
+Verification:
+
+- Live migration history contains the core schema and foreign-key index migrations.
+- All 26 public application tables have RLS enabled.
+- Anonymous users can select public ideas but cannot select `investment_interests` or `investments`.
+- Supabase security advisor reports no lints.
 
 ## Phase 3: Auth, Roles, and Onboarding
 

@@ -6,9 +6,9 @@ The product is being built in small verified phases so architecture, database se
 
 ## Current Phase
 
-Phase 1: foundation.
+Phase 2: Supabase schema and security foundation.
 
-This phase initializes the Next.js project, records product architecture decisions, connects the repository, and prepares the project for Supabase-backed implementation.
+The core Supabase schema, RLS policies, storage buckets, and investment workflow boundaries are now applied to the live `The SparkHub` Supabase project. Next is Phase 3: auth, roles, and onboarding.
 
 ## Source of Truth
 
@@ -44,6 +44,12 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+If port 3000 is not responding, start the local server again:
+
+```shell
+npm run dev -- --hostname 127.0.0.1 --port 3000
+```
 
 ## Verification
 
