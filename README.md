@@ -1,33 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SparkHub
+
+SparkHub is an idea discovery, innovation, collaboration, mentorship, and investor discovery platform.
+
+The product is being built in small verified phases so architecture, database security, and UI quality stay aligned.
+
+## Current Phase
+
+Phase 1: foundation.
+
+This phase initializes the Next.js project, records product architecture decisions, connects the repository, and prepares the project for Supabase-backed implementation.
+
+## Source of Truth
+
+- [Project brief](docs/PROJECT_BRIEF.md)
+- [Phased build plan](docs/PHASES.md)
+- [Investment workflow architecture](docs/architecture/INVESTMENT_WORKFLOW.md)
+- [Routes and roles](docs/architecture/ROUTES_AND_ROLES.md)
+- [Supabase plan](docs/architecture/SUPABASE_PLAN.md)
+
+## Stack
+
+- Next.js App Router
+- React
+- TypeScript
+- Tailwind CSS
+- Supabase
+- Framer Motion
+- Lucide React
+
+## Environment
+
+Copy `.env.example` to `.env.local` and fill in the publishable Supabase key.
+
+Never commit real secrets. The Supabase service role key must not be used in browser code.
 
 ## Getting Started
 
-First, run the development server:
+Run the development server:
 
-```bash
+```shell
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Verification
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```shell
+npm run lint
+npm run build
+```
 
-## Learn More
+## Product Boundary
 
-To learn more about Next.js, take a look at the following resources:
+SparkHub must keep investment discovery separate from actual investment records:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```text
+Idea Poster -> Idea -> Investment Interest -> Connection -> Investment
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Clicking "I'm Interested" creates an investment interest only. It must not create an investment or imply a financial transaction occurred.
 
 ## Deploy on Vercel
 
