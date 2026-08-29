@@ -69,8 +69,10 @@ Implementation notes:
 
 Goal: establish the professional UI/UX direction.
 
+Status: foundation implemented on 2026-08-30.
+
 - Use Google Stitch for visual exploration.
-- Implement theme tokens, reusable components, motion rules, and light/dark mode.
+- Implement theme tokens, reusable components, and motion rules.
 - Build public homepage, explore shell, ideas shell, investors shell, mentors shell, footer, and SEO metadata.
 
 Exit criteria:
@@ -78,6 +80,12 @@ Exit criteria:
 - Desktop and mobile screenshots are visually checked.
 - Reduced-motion mode is respected.
 - Public pages do not show fake production metrics.
+
+Implementation notes:
+
+- The first public UI foundation uses the Google Stitch design system asset documented in `docs/architecture/DESIGN_SYSTEM.md`.
+- The homepage uses a generated product-network visual stored in `public/images/sparkhub-hero-network.png`.
+- Light/dark mode remains a later design-system enhancement because the first Phase 4 pass prioritizes route coverage, product logic, and responsive composition.
 
 ## Phase 5: Idea Lifecycle and Engagement
 

@@ -1,8 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f7f3ec;
-  --foreground: #171717;
+  --background: #f6f3ed;
+  --foreground: #101817;
+  --spark-forest: #1f7a5a;
+  --spark-ink: #101817;
+  --spark-blue: #3157a4;
+  --spark-amber: #d4912a;
+  --spark-line: #d9d2c4;
+  --spark-muted: #60716b;
 }
 
 @theme inline {
@@ -16,4 +22,14 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+::selection {
+  background: rgba(31, 122, 90, 0.2);
+}
+
+a,
+button {
+  outline-color: var(--spark-forest);
+  outline-offset: 3px;
 }
