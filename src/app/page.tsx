@@ -2,8 +2,25 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#f7f3ec] text-[#171717]">
       <section className="mx-auto flex min-h-screen w-full max-w-6xl flex-col justify-center px-6 py-16 sm:px-8 lg:px-12">
+        <nav className="mb-16 flex items-center justify-between">
+          <span className="text-lg font-semibold text-[#10231f]">SparkHub</span>
+          <div className="flex items-center gap-3">
+            <a
+              className="rounded-lg px-3 py-2 text-sm font-semibold text-[#2c463f] transition hover:bg-white/70"
+              href="/login"
+            >
+              Sign in
+            </a>
+            <a
+              className="rounded-lg bg-[#10231f] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#1c3b33]"
+              href="/signup"
+            >
+              Join
+            </a>
+          </div>
+        </nav>
         <p className="mb-5 text-sm font-semibold uppercase tracking-[0.22em] text-[#2f6f62]">
-          SparkHub foundation
+          SparkHub phase 3
         </p>
         <div className="max-w-3xl">
           <h1 className="text-5xl font-semibold leading-[1.02] tracking-normal text-[#101817] sm:text-6xl lg:text-7xl">
@@ -11,8 +28,8 @@ export default function Home() {
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-8 text-[#45534f] sm:text-xl">
             SparkHub is being built as a real idea discovery, collaboration,
-            mentorship, and investor discovery platform. Phase 1 is focused on
-            the foundations that keep the product honest as it grows.
+            mentorship, and investor discovery platform. Phase 3 now adds
+            identity, role onboarding, and protected workspaces.
           </p>
         </div>
 

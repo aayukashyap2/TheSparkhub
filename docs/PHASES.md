@@ -46,6 +46,8 @@ Verification:
 
 Goal: make identity and role selection real.
 
+Status: foundation implemented on 2026-08-27.
+
 - Implement Supabase email/password and Google OAuth.
 - Add auth callback, session refresh, logout, and password reset.
 - Build role-aware onboarding for idea posters, investors, and mentors.
@@ -53,9 +55,15 @@ Goal: make identity and role selection real.
 
 Exit criteria:
 
-- Email/password and Google auth work locally.
-- Onboarding persists role-specific profile data.
-- Protected routes redirect correctly.
+- Email/password and Google auth routes are implemented.
+- Onboarding persists role-specific profile data after Supabase env keys are configured locally.
+- Protected routes redirect correctly and are forced to request-time rendering.
+
+Implementation notes:
+
+- `admin` is intentionally not self-selectable during onboarding.
+- Role-specific pages are separate protected routes, not one cosmetic sidebar switch.
+- Sentry files are present but dormant until DSN environment variables are configured.
 
 ## Phase 4: Design System and Public Product Surface
 

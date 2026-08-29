@@ -6,9 +6,9 @@ The product is being built in small verified phases so architecture, database se
 
 ## Current Phase
 
-Phase 2: Supabase schema and security foundation.
+Phase 3: auth, roles, and onboarding.
 
-The core Supabase schema, RLS policies, storage buckets, and investment workflow boundaries are now applied to the live `The SparkHub` Supabase project. Next is Phase 3: auth, roles, and onboarding.
+The app now has Supabase auth foundations, Google/email entry points, database-backed onboarding roles, protected role workspaces, and Sentry instrumentation placeholders. Real login requires a local `.env.local` with the Supabase publishable key.
 
 ## Source of Truth
 
@@ -17,6 +17,7 @@ The core Supabase schema, RLS policies, storage buckets, and investment workflow
 - [Investment workflow architecture](docs/architecture/INVESTMENT_WORKFLOW.md)
 - [Routes and roles](docs/architecture/ROUTES_AND_ROLES.md)
 - [Supabase plan](docs/architecture/SUPABASE_PLAN.md)
+- [Auth and onboarding architecture](docs/architecture/AUTH_AND_ONBOARDING.md)
 
 ## Stack
 
@@ -33,6 +34,8 @@ The core Supabase schema, RLS policies, storage buckets, and investment workflow
 Copy `.env.example` to `.env.local` and fill in the publishable Supabase key.
 
 Never commit real secrets. The Supabase service role key must not be used in browser code.
+
+Sentry is optional until the production project is created. Keep `SENTRY_AUTH_TOKEN` server-side only and never expose it through a `NEXT_PUBLIC_` variable.
 
 ## Getting Started
 
