@@ -4,12 +4,16 @@ import { useFormStatus } from "react-dom";
 
 type SubmitButtonProps = {
   children: React.ReactNode;
+  name?: string;
   variant?: "primary" | "secondary";
+  value?: string;
 };
 
 export function SubmitButton({
   children,
+  name,
   variant = "primary",
+  value,
 }: SubmitButtonProps) {
   const { pending } = useFormStatus();
 
@@ -22,7 +26,9 @@ export function SubmitButton({
     <button
       className={`inline-flex h-11 w-full items-center justify-center rounded-lg px-4 text-sm font-semibold transition ${className} disabled:cursor-not-allowed disabled:opacity-65`}
       disabled={pending}
+      name={name}
       type="submit"
+      value={value}
     >
       {pending ? "Working..." : children}
     </button>

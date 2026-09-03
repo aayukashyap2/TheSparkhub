@@ -6,9 +6,9 @@ The product is being built in small verified phases so architecture, database se
 
 ## Current Phase
 
-Phase 4: design system and public product surface.
+Phase 5: idea lifecycle and engagement.
 
-The app now has Supabase auth foundations, Google/email entry points, database-backed onboarding roles, protected role workspaces, Sentry instrumentation placeholders, and the first public SparkHub product surface. Real login requires a local `.env.local` with the Supabase publishable key.
+The app now has Supabase auth foundations, Google/email entry points, database-backed onboarding roles, protected role workspaces, Sentry instrumentation placeholders, the first public SparkHub product surface, and database-backed idea create/manage/discovery flows. Real login requires a local `.env.local` with the Supabase publishable key.
 
 ## Source of Truth
 
@@ -19,6 +19,7 @@ The app now has Supabase auth foundations, Google/email entry points, database-b
 - [Supabase plan](docs/architecture/SUPABASE_PLAN.md)
 - [Auth and onboarding architecture](docs/architecture/AUTH_AND_ONBOARDING.md)
 - [Design system foundation](docs/architecture/DESIGN_SYSTEM.md)
+- [Idea lifecycle and engagement](docs/architecture/IDEA_LIFECYCLE.md)
 
 ## Stack
 

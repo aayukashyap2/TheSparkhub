@@ -25,10 +25,10 @@ SparkHub must support role-specific product experiences with shared primitives a
 
 ## Idea Poster App
 
-- `/app/dashboard`
-- `/app/my-ideas`
-- `/app/ideas/new`
-- `/app/ideas/[id]`
+- `/app/idea-poster`
+- `/app/idea-poster/ideas`
+- `/app/idea-poster/ideas/new`
+- `/app/idea-poster/ideas/[id]/edit`
 - `/app/engagement`
 - `/app/investors`
 - `/app/collaborations`

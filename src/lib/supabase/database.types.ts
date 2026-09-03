@@ -1,11 +1,21 @@
 export type ProfileRole = "idea_poster" | "investor" | "mentor" | "admin";
 export type VisibilityLevel = "public" | "connections" | "private";
+export type IdeaVisibility = "public" | "unlisted" | "private";
 export type IdeaStage =
   | "idea"
   | "prototype"
   | "mvp"
   | "early_traction"
   | "growth";
+export type IdeaStatus = "draft" | "published" | "archived";
+export type MemberRole = "owner" | "collaborator" | "mentor";
+export type InterestLevel = "low" | "medium" | "high";
+export type InvestmentInterestStatus =
+  | "interested"
+  | "contacted"
+  | "discussion"
+  | "passed"
+  | "converted";
 
 export type Database = {
   public: {
@@ -108,6 +118,250 @@ export type Database = {
         };
         Relationships: [];
       };
+      categories: {
+        Row: {
+          id: string;
+          name: string;
+          slug: string;
+          description: string | null;
+          is_active: boolean;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          slug: string;
+          description?: string | null;
+          is_active?: boolean;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          name?: string;
+          slug?: string;
+          description?: string | null;
+          is_active?: boolean;
+          created_by?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      tags: {
+        Row: {
+          id: string;
+          name: string;
+          slug: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          slug: string;
+          created_at?: string;
+        };
+        Update: {
+          name?: string;
+          slug?: string;
+        };
+        Relationships: [];
+      };
+      ideas: {
+        Row: {
+          id: string;
+          creator_id: string;
+          category_id: string | null;
+          title: string;
+          slug: string;
+          summary: string;
+          problem: string | null;
+          solution: string | null;
+          target_users: string | null;
+          technology: string | null;
+          market_impact: string | null;
+          stage: IdeaStage;
+          status: IdeaStatus;
+          visibility: IdeaVisibility;
+          seeking_funding: boolean;
+          funding_goal: number | null;
+          funding_currency: string;
+          funding_visibility: VisibilityLevel;
+          use_of_funds: string | null;
+          published_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          creator_id: string;
+          category_id?: string | null;
+          title: string;
+          slug: string;
+          summary: string;
+          problem?: string | null;
+          solution?: string | null;
+          target_users?: string | null;
+          technology?: string | null;
+          market_impact?: string | null;
+          stage?: IdeaStage;
+          status?: IdeaStatus;
+          visibility?: IdeaVisibility;
+          seeking_funding?: boolean;
+          funding_goal?: number | null;
+          funding_currency?: string;
+          funding_visibility?: VisibilityLevel;
+          use_of_funds?: string | null;
+          published_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          category_id?: string | null;
+          title?: string;
+          slug?: string;
+          summary?: string;
+          problem?: string | null;
+          solution?: string | null;
+          target_users?: string | null;
+          technology?: string | null;
+          market_impact?: string | null;
+          stage?: IdeaStage;
+          status?: IdeaStatus;
+          visibility?: IdeaVisibility;
+          seeking_funding?: boolean;
+          funding_goal?: number | null;
+          funding_currency?: string;
+          funding_visibility?: VisibilityLevel;
+          use_of_funds?: string | null;
+          published_at?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      idea_tags: {
+        Row: {
+          idea_id: string;
+          tag_id: string;
+          created_at: string;
+        };
+        Insert: {
+          idea_id: string;
+          tag_id: string;
+          created_at?: string;
+        };
+        Update: Record<string, never>;
+        Relationships: [];
+      };
+      idea_members: {
+        Row: {
+          idea_id: string;
+          profile_id: string;
+          role: MemberRole;
+          created_at: string;
+        };
+        Insert: {
+          idea_id: string;
+          profile_id: string;
+          role?: MemberRole;
+          created_at?: string;
+        };
+        Update: {
+          role?: MemberRole;
+        };
+        Relationships: [];
+      };
+      idea_likes: {
+        Row: {
+          idea_id: string;
+          profile_id: string;
+          created_at: string;
+        };
+        Insert: {
+          idea_id: string;
+          profile_id: string;
+          created_at?: string;
+        };
+        Update: Record<string, never>;
+        Relationships: [];
+      };
+      idea_saves: {
+        Row: {
+          idea_id: string;
+          profile_id: string;
+          created_at: string;
+        };
+        Insert: {
+          idea_id: string;
+          profile_id: string;
+          created_at?: string;
+        };
+        Update: Record<string, never>;
+        Relationships: [];
+      };
+      idea_followers: {
+        Row: {
+          idea_id: string;
+          profile_id: string;
+          created_at: string;
+        };
+        Insert: {
+          idea_id: string;
+          profile_id: string;
+          created_at?: string;
+        };
+        Update: Record<string, never>;
+        Relationships: [];
+      };
+      idea_shares: {
+        Row: {
+          id: string;
+          idea_id: string;
+          profile_id: string | null;
+          channel: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          idea_id: string;
+          profile_id?: string | null;
+          channel?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          channel?: string | null;
+        };
+        Relationships: [];
+      };
+      comments: {
+        Row: {
+          id: string;
+          idea_id: string;
+          author_id: string;
+          parent_id: string | null;
+          body: string;
+          is_hidden: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          idea_id: string;
+          author_id: string;
+          parent_id?: string | null;
+          body: string;
+          is_hidden?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          body?: string;
+          is_hidden?: boolean;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       investor_profiles: {
         Row: {
           profile_id: string;
@@ -180,13 +434,58 @@ export type Database = {
         };
         Relationships: [];
       };
+      investment_interests: {
+        Row: {
+          id: string;
+          idea_id: string;
+          investor_id: string;
+          creator_id: string;
+          level: InterestLevel;
+          preferred_stage: IdeaStage | null;
+          message: string | null;
+          proposed_range: string | null;
+          questions: string | null;
+          status: InvestmentInterestStatus;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          idea_id: string;
+          investor_id: string;
+          creator_id?: string;
+          level?: InterestLevel;
+          preferred_stage?: IdeaStage | null;
+          message?: string | null;
+          proposed_range?: string | null;
+          questions?: string | null;
+          status?: InvestmentInterestStatus;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          level?: InterestLevel;
+          preferred_stage?: IdeaStage | null;
+          message?: string | null;
+          proposed_range?: string | null;
+          questions?: string | null;
+          status?: InvestmentInterestStatus;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
     Enums: {
       profile_role: ProfileRole;
       visibility_level: VisibilityLevel;
+      idea_visibility: IdeaVisibility;
       idea_stage: IdeaStage;
+      idea_status: IdeaStatus;
+      member_role: MemberRole;
+      interest_level: InterestLevel;
+      investment_interest_status: InvestmentInterestStatus;
     };
     CompositeTypes: Record<string, never>;
   };

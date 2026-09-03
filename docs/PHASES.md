@@ -91,15 +91,25 @@ Implementation notes:
 
 Goal: make ideas the central database-backed object.
 
+Status: foundation implemented on 2026-09-04.
+
 - Create, edit, publish, archive, and view ideas.
-- Add tags, categories, visibility, media, funding profile, and idea detail pages.
-- Add likes, comments, saves, shares, reposts, follows, and view tracking.
+- Add categories, visibility, funding profile fields, and idea detail pages.
+- Add likes, comments, saves, shares, and follows.
 
 Exit criteria:
 
 - Idea poster can create and manage an idea.
 - Public users can view public ideas.
 - Engagement counts come from real records.
+
+Implementation notes:
+
+- The shipped Phase 5 scope uses the existing Supabase tables from Phase 2.
+- Public discovery reads only published, public ideas.
+- Draft and archived ideas remain creator-owned workspace records.
+- Tags, media uploads, repost UI, and view tracking remain later Phase 5 refinements or Phase 8 follow-ups.
+- Investor interest is intentionally not implemented here; it belongs to Phase 7.
 
 ## Phase 6: Role-Specific Applications
 
