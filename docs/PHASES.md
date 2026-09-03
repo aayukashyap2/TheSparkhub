@@ -115,6 +115,8 @@ Implementation notes:
 
 Goal: build distinct app experiences backed by distinct workflows.
 
+Status: foundation implemented on 2026-09-04.
+
 - Idea Poster: dashboard, my ideas, engagement, investors, collaborations, mentors.
 - Investor: dashboard, discover, watchlist, investment interests, connections, portfolio, profile.
 - Mentor: dashboard, expertise, discover, mentorship requests, mentees.
@@ -123,6 +125,14 @@ Exit criteria:
 
 - Navigation, data queries, and empty states differ by role.
 - Role checks are enforced outside the UI.
+
+Implementation notes:
+
+- A shared protected app shell now renders role-specific navigation.
+- Investor discovery reads public ideas; watchlist reads saved ideas; interests read `investment_interests` without creating them.
+- Mentor discovery reads public ideas; requests and mentees are separate mentorship surfaces.
+- Idea poster engagement uses real idea engagement counts.
+- Connection creation and investment interest creation remain Phase 7.
 
 ## Phase 7: Investment Interest and Connection Workflow
 

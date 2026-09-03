@@ -1,5 +1,9 @@
 import Link from "next/link";
-import { ROLE_DESCRIPTIONS, ROLE_LABELS, ROLE_WORKFLOWS } from "@/lib/auth/roles";
+import {
+  ROLE_DESCRIPTIONS,
+  ROLE_LABELS,
+  ROLE_NAV_ITEMS,
+} from "@/lib/auth/roles";
 import type { ProfileRole } from "@/lib/supabase/database.types";
 
 type RoleDashboardProps = {
@@ -8,7 +12,7 @@ type RoleDashboardProps = {
 };
 
 export function RoleDashboard({ role, displayName }: RoleDashboardProps) {
-  const workflows = ROLE_WORKFLOWS[role];
+  const workflows = ROLE_NAV_ITEMS[role];
 
   return (
     <main className="min-h-screen bg-[#f6f4ef] text-[#13211f]">
@@ -22,17 +26,17 @@ export function RoleDashboard({ role, displayName }: RoleDashboardProps) {
           </p>
           <nav className="mt-8 space-y-1">
             {workflows.map((item, index) => (
-              <a
+              <Link
                 className={`block rounded-lg px-3 py-2 text-sm transition ${
                   index === 0
                     ? "bg-white text-[#10231f]"
                     : "text-[#d9e7e1] hover:bg-white/10"
                 }`}
-                href="#"
-                key={item}
+                href={item.href}
+                key={`${item.label}-${item.href}`}
               >
-                {item}
-              </a>
+                {item.label}
+              </Link>
             ))}
           </nav>
           <Link
@@ -58,10 +62,10 @@ export function RoleDashboard({ role, displayName }: RoleDashboardProps) {
             {workflows.slice(1).map((item) => (
               <article
                 className="rounded-lg border border-[#e0e5e2] bg-[#fbfcfb] p-4 transition hover:-translate-y-0.5 hover:border-[#9bc5b5] hover:shadow-sm"
-                key={item}
+                key={`${item.label}-${item.href}`}
               >
                 <h2 className="text-base font-semibold text-[#13211f]">
-                  {item}
+                  {item.label}
                 </h2>
                 <p className="mt-2 text-sm leading-6 text-[#64736e]">
                   Phase 3 wires access and identity. This workflow receives

@@ -24,6 +24,13 @@ export type IdeaComment = CommentRow & {
   authorName: string;
 };
 
+export type InvestorProfileRow =
+  Database["public"]["Tables"]["investor_profiles"]["Row"];
+export type MentorProfileRow =
+  Database["public"]["Tables"]["mentor_profiles"]["Row"];
+export type InvestmentInterestRow =
+  Database["public"]["Tables"]["investment_interests"]["Row"];
+
 const IDEA_SELECT =
   "id, creator_id, category_id, title, slug, summary, problem, solution, target_users, technology, market_impact, stage, status, visibility, seeking_funding, funding_goal, funding_currency, funding_visibility, use_of_funds, published_at, created_at, updated_at";
 
@@ -90,6 +97,101 @@ export async function listCreatorIdeas(creatorId: string): Promise<PublicIdea[]>
     .order("updated_at", { ascending: false });
 
   return attachIdeaMetadata(data ?? []);
+}
+
+export async function listSavedIdeas(profileId: string): Promise<PublicIdea[]> {
+  if (!isSupabaseConfigured()) {
+    return [];
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const { data: saves } = await supabase
+    .from("idea_saves")
+    .select("idea_id")
+    .eq("profile_id", profileId);
+
+  const ideaIds = [...new Set((saves ?? []).map((save) => save.idea_id))];
+  if (ideaIds.length === 0) {
+    return [];
+  }
+
+  const { data } = await supabase
+    .from("ideas")
+    .select(IDEA_SELECT)
+    .in("id", ideaIds)
+    .eq("status", "published")
+    .eq("visibility", "public")
+    .order("published_at", { ascending: false });
+
+  return attachIdeaMetadata(data ?? []);
+}
+
+export async function listInvestorInterests(investorId: string) {
+  if (!isSupabaseConfigured()) {
+    return [];
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
+    .from("investment_interests")
+    .select(
+      "id, idea_id, investor_id, creator_id, level, preferred_stage, message, proposed_range, questions, status, created_at, updated_at",
+    )
+    .eq("investor_id", investorId)
+    .order("updated_at", { ascending: false });
+
+  return data ?? [];
+}
+
+export async function listCreatorInvestmentInterests(creatorId: string) {
+  if (!isSupabaseConfigured()) {
+    return [];
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
+    .from("investment_interests")
+    .select(
+      "id, idea_id, investor_id, creator_id, level, preferred_stage, message, proposed_range, questions, status, created_at, updated_at",
+    )
+    .eq("creator_id", creatorId)
+    .order("updated_at", { ascending: false });
+
+  return data ?? [];
+}
+
+export async function getInvestorProfile(profileId: string) {
+  if (!isSupabaseConfigured()) {
+    return null;
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
+    .from("investor_profiles")
+    .select(
+      "profile_id, investor_type, bio, sectors, preferred_stages, location_preference, years_experience, portfolio_visibility, investment_history_visibility, public_investment_count, active_interest_count, created_at, updated_at",
+    )
+    .eq("profile_id", profileId)
+    .maybeSingle();
+
+  return data;
+}
+
+export async function getMentorProfile(profileId: string) {
+  if (!isSupabaseConfigured()) {
+    return null;
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
+    .from("mentor_profiles")
+    .select(
+      "profile_id, expertise, bio, availability, visibility, created_at, updated_at",
+    )
+    .eq("profile_id", profileId)
+    .maybeSingle();
+
+  return data;
 }
 
 export async function getCreatorIdea(id: string, creatorId: string) {

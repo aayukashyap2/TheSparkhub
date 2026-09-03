@@ -61,6 +61,48 @@ export const ROLE_WORKFLOWS: Record<ProfileRole, string[]> = {
   ],
 };
 
+export const ROLE_NAV_ITEMS: Record<
+  ProfileRole,
+  Array<{ label: string; href: string }>
+> = {
+  idea_poster: [
+    { label: "Dashboard", href: "/app/idea-poster" },
+    { label: "My Ideas", href: "/app/idea-poster/ideas" },
+    { label: "Create", href: "/app/idea-poster/ideas/new" },
+    { label: "Engagement", href: "/app/idea-poster/engagement" },
+    { label: "Investors", href: "/app/idea-poster/investors" },
+    { label: "Collaborations", href: "/app/idea-poster/collaborations" },
+    { label: "Mentors", href: "/app/idea-poster/mentors" },
+  ],
+  investor: [
+    { label: "Dashboard", href: "/app/investor" },
+    { label: "Discover", href: "/app/investor/discover" },
+    { label: "Watchlist", href: "/app/investor/watchlist" },
+    { label: "Investment Interests", href: "/app/investor/interests" },
+    { label: "Connections", href: "/app/investor/connections" },
+    { label: "Portfolio", href: "/app/investor/portfolio" },
+    { label: "Profile", href: "/app/investor/profile" },
+  ],
+  mentor: [
+    { label: "Dashboard", href: "/app/mentor" },
+    { label: "Expertise", href: "/app/mentor/profile" },
+    { label: "Discover", href: "/app/mentor/discover" },
+    { label: "Mentorship Requests", href: "/app/mentor/requests" },
+    { label: "Mentees", href: "/app/mentor/mentees" },
+    { label: "Profile", href: "/app/mentor/profile" },
+  ],
+  admin: [
+    { label: "Dashboard", href: "/app/admin" },
+    { label: "Users", href: "#" },
+    { label: "Ideas", href: "#" },
+    { label: "Investors", href: "#" },
+    { label: "Investments/Interests", href: "#" },
+    { label: "Reports", href: "#" },
+    { label: "Moderation", href: "#" },
+    { label: "Analytics", href: "#" },
+  ],
+};
+
 export const ROLE_DESCRIPTIONS: Record<ProfileRole, string> = {
   idea_poster:
     "Create ideas, track engagement, meet investors, and manage collaborations.",
