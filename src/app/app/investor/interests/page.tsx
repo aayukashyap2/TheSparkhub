@@ -1,5 +1,6 @@
 import { AppPageHeader, AppShell } from "@/components/app/app-shell";
 import { EmptyWorkflow } from "@/components/app/empty-workflow";
+import { InvestmentInterestCard } from "@/components/app/investment-interest-card";
 import { requireRole } from "@/lib/auth/session";
 import { listInvestorInterests } from "@/lib/ideas/queries";
 
@@ -25,26 +26,19 @@ export default async function InvestorInterestsPage() {
           <EmptyWorkflow
             href="/app/investor/discover"
             linkLabel="Discover ideas"
-            text="Phase 7 will add the action that creates investment interest records. This page is ready to display those records once they exist."
+            text="Create an explicit interest from any public idea before requesting a connection with the creator."
             title="No investment interests yet"
           />
         ) : (
           <div className="grid gap-3">
             {interests.map((interest) => (
-              <article
-                className="rounded-lg border border-[#dfe5e1] bg-[#fbfcfb] p-4"
+              <InvestmentInterestCard
+                interest={interest}
                 key={interest.id}
-              >
-                <p className="text-sm font-semibold uppercase text-[#1f7a5a]">
-                  {interest.status}
-                </p>
-                <h2 className="mt-2 text-lg font-semibold">
-                  Interest level: {interest.level}
-                </h2>
-                <p className="mt-2 text-sm text-[#60716b]">
-                  Idea record: {interest.idea_id}
-                </p>
-              </article>
+                mode="investor"
+                returnTo="/app/investor/interests"
+                viewerId={user.id}
+              />
             ))}
           </div>
         )}

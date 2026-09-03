@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { CommentForm } from "@/components/ideas/comment-form";
 import { EngagementActions } from "@/components/ideas/engagement-actions";
+import { InvestmentInterestPanel } from "@/components/ideas/investment-interest-panel";
 import { IDEA_STAGE_LABELS, formatDate } from "@/lib/ideas/format";
 import { getPublicIdea, listIdeaComments } from "@/lib/ideas/queries";
 
@@ -139,6 +140,12 @@ export default async function IdeaDetailPage({
                 : "Funding details stay private unless the creator chooses otherwise."}
             </p>
           </div>
+
+          <InvestmentInterestPanel
+            ideaId={idea.id}
+            slug={idea.slug}
+            stage={idea.stage}
+          />
         </aside>
       </section>
 

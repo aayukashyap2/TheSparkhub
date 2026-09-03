@@ -9,6 +9,12 @@ export type IdeaStage =
   | "growth";
 export type IdeaStatus = "draft" | "published" | "archived";
 export type MemberRole = "owner" | "collaborator" | "mentor";
+export type RequestStatus =
+  | "pending"
+  | "accepted"
+  | "declined"
+  | "cancelled"
+  | "blocked";
 export type InterestLevel = "low" | "medium" | "high";
 export type InvestmentInterestStatus =
   | "interested"
@@ -16,6 +22,13 @@ export type InvestmentInterestStatus =
   | "discussion"
   | "passed"
   | "converted";
+export type InvestmentStatus =
+  | "proposed"
+  | "committed"
+  | "active"
+  | "completed"
+  | "exited"
+  | "cancelled";
 
 export type Database = {
   public: {
@@ -474,6 +487,85 @@ export type Database = {
         };
         Relationships: [];
       };
+      connections: {
+        Row: {
+          id: string;
+          requester_id: string;
+          addressee_id: string;
+          idea_id: string | null;
+          status: RequestStatus;
+          message: string | null;
+          responded_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          requester_id: string;
+          addressee_id: string;
+          idea_id?: string | null;
+          status?: RequestStatus;
+          message?: string | null;
+          responded_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          status?: RequestStatus;
+          message?: string | null;
+          responded_at?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      investments: {
+        Row: {
+          id: string;
+          idea_id: string;
+          investor_id: string;
+          creator_id: string;
+          interest_id: string | null;
+          status: InvestmentStatus;
+          amount: number | null;
+          currency: string;
+          amount_visibility: VisibilityLevel;
+          thesis: string | null;
+          terms_summary: string | null;
+          recorded_by: string | null;
+          occurred_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          idea_id: string;
+          investor_id: string;
+          creator_id: string;
+          interest_id?: string | null;
+          status?: InvestmentStatus;
+          amount?: number | null;
+          currency?: string;
+          amount_visibility?: VisibilityLevel;
+          thesis?: string | null;
+          terms_summary?: string | null;
+          recorded_by?: string | null;
+          occurred_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          status?: InvestmentStatus;
+          amount?: number | null;
+          currency?: string;
+          amount_visibility?: VisibilityLevel;
+          thesis?: string | null;
+          terms_summary?: string | null;
+          recorded_by?: string | null;
+          occurred_at?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
@@ -484,8 +576,10 @@ export type Database = {
       idea_stage: IdeaStage;
       idea_status: IdeaStatus;
       member_role: MemberRole;
+      request_status: RequestStatus;
       interest_level: InterestLevel;
       investment_interest_status: InvestmentInterestStatus;
+      investment_status: InvestmentStatus;
     };
     CompositeTypes: Record<string, never>;
   };

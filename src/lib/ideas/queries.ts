@@ -30,6 +30,26 @@ export type MentorProfileRow =
   Database["public"]["Tables"]["mentor_profiles"]["Row"];
 export type InvestmentInterestRow =
   Database["public"]["Tables"]["investment_interests"]["Row"];
+export type ConnectionRow = Database["public"]["Tables"]["connections"]["Row"];
+
+export type InvestmentInterestWithContext = InvestmentInterestRow & {
+  connectionAddresseeId: string | null;
+  connectionId: string | null;
+  connectionRequesterId: string | null;
+  connectionStatus: ConnectionRow["status"] | null;
+  creatorName: string;
+  ideaSlug: string | null;
+  ideaTitle: string;
+  investorName: string;
+};
+
+export type ConnectionWithContext = ConnectionRow & {
+  addresseeName: string;
+  ideaSlug: string | null;
+  ideaTitle: string | null;
+  otherName: string;
+  requesterName: string;
+};
 
 const IDEA_SELECT =
   "id, creator_id, category_id, title, slug, summary, problem, solution, target_users, technology, market_impact, stage, status, visibility, seeking_funding, funding_goal, funding_currency, funding_visibility, use_of_funds, published_at, created_at, updated_at";
@@ -126,7 +146,9 @@ export async function listSavedIdeas(profileId: string): Promise<PublicIdea[]> {
   return attachIdeaMetadata(data ?? []);
 }
 
-export async function listInvestorInterests(investorId: string) {
+export async function listInvestorInterests(
+  investorId: string,
+): Promise<InvestmentInterestWithContext[]> {
   if (!isSupabaseConfigured()) {
     return [];
   }
@@ -140,10 +162,12 @@ export async function listInvestorInterests(investorId: string) {
     .eq("investor_id", investorId)
     .order("updated_at", { ascending: false });
 
-  return data ?? [];
+  return attachInterestContext(data ?? [], investorId);
 }
 
-export async function listCreatorInvestmentInterests(creatorId: string) {
+export async function listCreatorInvestmentInterests(
+  creatorId: string,
+): Promise<InvestmentInterestWithContext[]> {
   if (!isSupabaseConfigured()) {
     return [];
   }
@@ -157,7 +181,71 @@ export async function listCreatorInvestmentInterests(creatorId: string) {
     .eq("creator_id", creatorId)
     .order("updated_at", { ascending: false });
 
-  return data ?? [];
+  return attachInterestContext(data ?? [], creatorId);
+}
+
+export async function listProfileConnections(
+  profileId: string,
+): Promise<ConnectionWithContext[]> {
+  if (!isSupabaseConfigured()) {
+    return [];
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
+    .from("connections")
+    .select(
+      "id, requester_id, addressee_id, idea_id, status, message, responded_at, created_at, updated_at",
+    )
+    .or(`requester_id.eq.${profileId},addressee_id.eq.${profileId}`)
+    .order("updated_at", { ascending: false });
+
+  const connections = data ?? [];
+  if (connections.length === 0) {
+    return [];
+  }
+
+  const profileIds = [
+    ...new Set(
+      connections.flatMap((connection) => [
+        connection.requester_id,
+        connection.addressee_id,
+      ]),
+    ),
+  ];
+  const ideaIds = [
+    ...new Set(
+      connections
+        .map((connection) => connection.idea_id)
+        .filter((id): id is string => Boolean(id)),
+    ),
+  ];
+
+  const [profileNames, ideaTitles] = await Promise.all([
+    getProfileNames(profileIds),
+    getIdeaTitles(ideaIds),
+  ]);
+
+  return connections.map((connection) => {
+    const otherId =
+      connection.requester_id === profileId
+        ? connection.addressee_id
+        : connection.requester_id;
+    const idea = connection.idea_id
+      ? ideaTitles.get(connection.idea_id)
+      : undefined;
+
+    return {
+      ...connection,
+      addresseeName:
+        profileNames.get(connection.addressee_id) ?? "SparkHub member",
+      ideaSlug: idea?.slug ?? null,
+      ideaTitle: idea?.title ?? null,
+      otherName: profileNames.get(otherId) ?? "SparkHub member",
+      requesterName:
+        profileNames.get(connection.requester_id) ?? "SparkHub member",
+    };
+  });
 }
 
 export async function getInvestorProfile(profileId: string) {
@@ -265,6 +353,93 @@ async function attachIdeaMetadata(ideas: IdeaRow[]): Promise<PublicIdea[]> {
       : null,
     engagement: engagementEntries[index] ?? emptyEngagement(),
   }));
+}
+
+async function attachInterestContext(
+  interests: InvestmentInterestRow[],
+  viewerId: string,
+): Promise<InvestmentInterestWithContext[]> {
+  if (interests.length === 0 || !isSupabaseConfigured()) {
+    return [];
+  }
+
+  const ideaIds = [...new Set(interests.map((interest) => interest.idea_id))];
+  const profileIds = [
+    ...new Set(
+      interests.flatMap((interest) => [
+        interest.creator_id,
+        interest.investor_id,
+      ]),
+    ),
+  ];
+
+  const [ideaTitles, profileNames, connections] = await Promise.all([
+    getIdeaTitles(ideaIds),
+    getProfileNames(profileIds),
+    getConnectionsForIdeas(viewerId, ideaIds),
+  ]);
+
+  return interests.map((interest) => {
+    const idea = ideaTitles.get(interest.idea_id);
+    const connection = connections.find(
+      (candidate) =>
+        candidate.idea_id === interest.idea_id &&
+        ((candidate.requester_id === interest.investor_id &&
+          candidate.addressee_id === interest.creator_id) ||
+          (candidate.requester_id === interest.creator_id &&
+            candidate.addressee_id === interest.investor_id)),
+    );
+
+    return {
+      ...interest,
+      connectionAddresseeId: connection?.addressee_id ?? null,
+      connectionId: connection?.id ?? null,
+      connectionRequesterId: connection?.requester_id ?? null,
+      connectionStatus: connection?.status ?? null,
+      creatorName: profileNames.get(interest.creator_id) ?? "SparkHub creator",
+      ideaSlug: idea?.slug ?? null,
+      ideaTitle: idea?.title ?? "SparkHub idea",
+      investorName:
+        profileNames.get(interest.investor_id) ?? "SparkHub investor",
+    };
+  });
+}
+
+async function getConnectionsForIdeas(profileId: string, ideaIds: string[]) {
+  if (ideaIds.length === 0 || !isSupabaseConfigured()) {
+    return [];
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
+    .from("connections")
+    .select(
+      "id, requester_id, addressee_id, idea_id, status, message, responded_at, created_at, updated_at",
+    )
+    .in("idea_id", ideaIds)
+    .or(`requester_id.eq.${profileId},addressee_id.eq.${profileId}`);
+
+  return data ?? [];
+}
+
+async function getIdeaTitles(ideaIds: string[]) {
+  const ideas = new Map<string, { slug: string; title: string }>();
+
+  if (ideaIds.length === 0 || !isSupabaseConfigured()) {
+    return ideas;
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
+    .from("ideas")
+    .select("id, title, slug")
+    .in("id", ideaIds);
+
+  for (const idea of data ?? []) {
+    ideas.set(idea.id, { slug: idea.slug, title: idea.title });
+  }
+
+  return ideas;
 }
 
 async function getProfileNames(profileIds: string[]) {

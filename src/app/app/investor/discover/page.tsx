@@ -12,7 +12,7 @@ export default async function InvestorDiscoverPage() {
   return (
     <AppShell active="Discover" displayName={profile.display_name} role="investor">
       <AppPageHeader
-        description="Review public ideas as potential opportunities. Saving belongs to watchlist behavior; investment interest creation comes in Phase 7."
+        description="Review public ideas, save the ones you want to track, then open a clear interest record when a conversation is worth starting."
         eyebrow="Discover"
         title="Find ideas that match your thesis."
       />

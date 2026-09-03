@@ -54,6 +54,27 @@ const CommentSchema = z.object({
   body: z.string().trim().min(2, "Write a comment first.").max(800),
 });
 
+const InvestmentInterestSchema = z.object({
+  ideaId: z.string().uuid(),
+  slug: z.string().min(1),
+  level: z.enum(["low", "medium", "high"]).default("medium"),
+  message: z.string().trim().max(700).optional(),
+  proposedRange: z.string().trim().max(120).optional(),
+  questions: z.string().trim().max(700).optional(),
+});
+
+const ConnectionRequestSchema = z.object({
+  interestId: z.string().uuid(),
+  message: z.string().trim().max(700).optional(),
+  returnTo: z.string().optional(),
+});
+
+const ConnectionResponseSchema = z.object({
+  connectionId: z.string().uuid(),
+  response: z.enum(["accepted", "declined"]),
+  returnTo: z.string().optional(),
+});
+
 const IdSchema = z.object({
   ideaId: z.string().uuid(),
   slug: z.string().optional(),
@@ -81,6 +102,14 @@ function parseFundingGoal(value: string) {
 
   const parsed = Number(trimmed);
   return Number.isFinite(parsed) ? parsed : Number.NaN;
+}
+
+function safeReturnPath(value: string | undefined, fallback: string) {
+  if (!value?.startsWith("/app/")) {
+    return fallback;
+  }
+
+  return value;
 }
 
 function parseIdeaForm(formData: FormData) {
@@ -375,4 +404,166 @@ export async function recordShareAction(formData: FormData) {
 
   revalidatePath(`/ideas/${parsed.data.slug}`);
   redirect(`/ideas/${parsed.data.slug}`);
+}
+
+export async function createInvestmentInterestAction(formData: FormData) {
+  const parsed = InvestmentInterestSchema.safeParse({
+    ideaId: formData.get("ideaId"),
+    slug: formData.get("slug"),
+    level: formData.get("level") || "medium",
+    message: formData.get("message"),
+    proposedRange: formData.get("proposedRange"),
+    questions: formData.get("questions"),
+  });
+
+  if (!parsed.success) {
+    redirect("/ideas");
+  }
+
+  const { user } = await requireRole("investor");
+  const supabase = await createSupabaseServerClient();
+  const { data: idea } = await supabase
+    .from("ideas")
+    .select("id, creator_id, slug, stage, status, visibility")
+    .eq("id", parsed.data.ideaId)
+    .eq("status", "published")
+    .eq("visibility", "public")
+    .maybeSingle();
+
+  if (!idea || idea.creator_id === user.id) {
+    redirect(`/ideas/${parsed.data.slug}`);
+  }
+
+  const interestFields = {
+    level: parsed.data.level,
+    preferred_stage: idea.stage,
+    message: optionalText(parsed.data.message ?? ""),
+    proposed_range: optionalText(parsed.data.proposedRange ?? ""),
+    questions: optionalText(parsed.data.questions ?? ""),
+    status: "interested" as const,
+  };
+
+  const { data: existing } = await supabase
+    .from("investment_interests")
+    .select("id")
+    .eq("idea_id", idea.id)
+    .eq("investor_id", user.id)
+    .maybeSingle();
+
+  if (existing) {
+    await supabase
+      .from("investment_interests")
+      .update(interestFields)
+      .eq("id", existing.id)
+      .eq("investor_id", user.id);
+  } else {
+    await supabase.from("investment_interests").insert({
+      ...interestFields,
+      creator_id: idea.creator_id,
+      idea_id: idea.id,
+      investor_id: user.id,
+    });
+  }
+
+  revalidatePath(`/ideas/${parsed.data.slug}`);
+  revalidatePath("/app/investor");
+  revalidatePath("/app/investor/interests");
+  revalidatePath("/app/idea-poster/investors");
+
+  redirect(`/app/investor/interests?interest=${existing ? "updated" : "created"}`);
+}
+
+export async function requestConnectionForInterestAction(formData: FormData) {
+  const parsed = ConnectionRequestSchema.safeParse({
+    interestId: formData.get("interestId"),
+    message: formData.get("message"),
+    returnTo: formData.get("returnTo"),
+  });
+  const returnTo = safeReturnPath(parsed.success ? parsed.data.returnTo : undefined, "/app");
+
+  if (!parsed.success) {
+    redirect(returnTo);
+  }
+
+  const { user } = await requireOnboardedUser();
+  const supabase = await createSupabaseServerClient();
+  const { data: interest } = await supabase
+    .from("investment_interests")
+    .select("id, idea_id, investor_id, creator_id, status")
+    .eq("id", parsed.data.interestId)
+    .maybeSingle();
+
+  const isInvestor = interest?.investor_id === user.id;
+  const isCreator = interest?.creator_id === user.id;
+
+  if (!interest || (!isInvestor && !isCreator)) {
+    redirect(returnTo);
+  }
+
+  const addresseeId = isInvestor ? interest.creator_id : interest.investor_id;
+  const { data: existing } = await supabase
+    .from("connections")
+    .select("id")
+    .eq("idea_id", interest.idea_id)
+    .or(
+      `and(requester_id.eq.${user.id},addressee_id.eq.${addresseeId}),and(requester_id.eq.${addresseeId},addressee_id.eq.${user.id})`,
+    )
+    .maybeSingle();
+
+  if (!existing) {
+    await supabase.from("connections").insert({
+      requester_id: user.id,
+      addressee_id: addresseeId,
+      idea_id: interest.idea_id,
+      message: optionalText(parsed.data.message ?? ""),
+    });
+  }
+
+  if (interest.status === "interested") {
+    await supabase
+      .from("investment_interests")
+      .update({ status: "contacted" })
+      .eq("id", interest.id);
+  }
+
+  revalidatePath("/app/investor/interests");
+  revalidatePath("/app/investor/connections");
+  revalidatePath("/app/idea-poster/investors");
+  revalidatePath("/app/idea-poster/collaborations");
+
+  redirect(`${returnTo}?connection=${existing ? "exists" : "requested"}`);
+}
+
+export async function respondToConnectionAction(formData: FormData) {
+  const parsed = ConnectionResponseSchema.safeParse({
+    connectionId: formData.get("connectionId"),
+    response: formData.get("response"),
+    returnTo: formData.get("returnTo"),
+  });
+  const returnTo = safeReturnPath(parsed.success ? parsed.data.returnTo : undefined, "/app");
+
+  if (!parsed.success) {
+    redirect(returnTo);
+  }
+
+  const { user } = await requireOnboardedUser();
+  const supabase = await createSupabaseServerClient();
+  const respondedAt = new Date().toISOString();
+
+  await supabase
+    .from("connections")
+    .update({
+      responded_at: respondedAt,
+      status: parsed.data.response,
+    })
+    .eq("id", parsed.data.connectionId)
+    .eq("addressee_id", user.id)
+    .eq("status", "pending");
+
+  revalidatePath("/app/investor/interests");
+  revalidatePath("/app/investor/connections");
+  revalidatePath("/app/idea-poster/investors");
+  revalidatePath("/app/idea-poster/collaborations");
+
+  redirect(`${returnTo}?connection=${parsed.data.response}`);
 }

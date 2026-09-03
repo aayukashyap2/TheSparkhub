@@ -1,5 +1,6 @@
 import { AppPageHeader, AppShell } from "@/components/app/app-shell";
 import { EmptyWorkflow } from "@/components/app/empty-workflow";
+import { InvestmentInterestCard } from "@/components/app/investment-interest-card";
 import { requireRole } from "@/lib/auth/session";
 import { listCreatorInvestmentInterests } from "@/lib/ideas/queries";
 
@@ -21,26 +22,19 @@ export default async function IdeaPosterInvestorsPage() {
           <EmptyWorkflow
             href="/app/idea-poster/ideas"
             linkLabel="Manage ideas"
-            text="This page is ready for Phase 7 investment interest records. Engagement signals from Phase 5 remain separate."
+            text="Investor interest will appear here after someone creates an explicit interest record from a published idea."
             title="No investment interests yet"
           />
         ) : (
           <div className="grid gap-3">
             {interests.map((interest) => (
-              <article
-                className="rounded-lg border border-[#dfe5e1] bg-[#fbfcfb] p-4"
+              <InvestmentInterestCard
+                interest={interest}
                 key={interest.id}
-              >
-                <p className="text-sm font-semibold uppercase text-[#1f7a5a]">
-                  {interest.status}
-                </p>
-                <h2 className="mt-2 text-lg font-semibold">
-                  Interest level: {interest.level}
-                </h2>
-                <p className="mt-2 text-sm text-[#60716b]">
-                  Investor record: {interest.investor_id}
-                </p>
-              </article>
+                mode="creator"
+                returnTo="/app/idea-poster/investors"
+                viewerId={user.id}
+              />
             ))}
           </div>
         )}

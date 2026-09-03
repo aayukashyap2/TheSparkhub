@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   Compass,
   Lightbulb,
+  MapPin,
   MessageSquareText,
   ShieldCheck,
   Sparkles,
@@ -73,6 +74,15 @@ const navItems = [
   { label: "Mentors", href: "/mentors" },
 ];
 
+const signalChips = ["Post", "Watch", "Connect"];
+
+const socialLinks = [
+  { label: "GitHub", href: "https://github.com/aayukashyap2/TheSparkhub", mark: "GH" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/", mark: "in" },
+  { label: "Instagram", href: "https://www.instagram.com/", mark: "IG" },
+  { label: "X", href: "https://x.com/", mark: "X" },
+];
+
 export function PublicHome() {
   const reduceMotion = useReducedMotion();
   const reveal = {
@@ -120,7 +130,11 @@ export function PublicHome() {
       </header>
 
       <section className="relative isolate min-h-[92svh] overflow-hidden">
-        <div className="absolute inset-y-0 right-0 -z-10 w-full lg:w-[64%]">
+        <motion.div
+          animate={reduceMotion ? undefined : { scale: [1.02, 1] }}
+          className="absolute inset-y-0 right-0 -z-10 w-full lg:w-[64%]"
+          transition={{ duration: 1.4, ease: "easeOut" }}
+        >
           <Image
             alt="SparkHub product network visual connecting ideas, investor interest, mentors, and collaboration paths"
             className="h-full w-full object-cover object-center opacity-80"
@@ -131,7 +145,7 @@ export function PublicHome() {
           />
           <div className="absolute inset-0 bg-[#f6f3ed]/78 lg:bg-[#f6f3ed]/28" />
           <div className="absolute inset-y-0 left-0 hidden w-2/5 bg-[#f6f3ed] lg:block" />
-        </div>
+        </motion.div>
 
         <motion.div
           animate="visible"
@@ -143,21 +157,20 @@ export function PublicHome() {
             className="max-w-fit rounded-full border border-[#cfb574] bg-white/70 px-3 py-1 text-xs font-semibold uppercase text-[#765411]"
             variants={reveal}
           >
-            Built for idea discovery, not investment shortcuts
+            Ideas, people, momentum
           </motion.p>
           <motion.h1
             className="mt-5 max-w-3xl text-5xl font-semibold leading-[1.02] tracking-normal text-[#101817] sm:text-6xl lg:text-7xl"
             variants={reveal}
           >
-            SparkHub turns promising ideas into trusted momentum.
+            Where ideas find the right people.
           </motion.h1>
           <motion.p
-            className="mt-6 max-w-2xl text-lg leading-8 text-[#41534d] sm:text-xl"
+            className="mt-6 max-w-xl text-lg leading-8 text-[#41534d] sm:text-xl"
             variants={reveal}
           >
-            A role-aware platform where creators, investors, mentors, and admins
-            work through clear stages from idea publishing to interest,
-            connection, and only then investment records.
+            Post a spark. Save what matters. Start the right conversation when
+            the timing feels real.
           </motion.p>
           <motion.div
             className="mt-8 flex flex-col gap-3 sm:flex-row"
@@ -177,6 +190,29 @@ export function PublicHome() {
               Start with your role
               <ArrowRight aria-hidden="true" size={17} />
             </Link>
+          </motion.div>
+
+          <motion.div
+            className="mt-10 flex flex-wrap gap-2"
+            variants={reveal}
+          >
+            {signalChips.map((chip, index) => (
+              <motion.span
+                animate={
+                  reduceMotion ? undefined : { y: [0, -5, 0], opacity: [0.8, 1, 0.8] }
+                }
+                className="rounded-full border border-white/80 bg-white/72 px-3 py-1.5 text-xs font-semibold text-[#314641] shadow-sm backdrop-blur"
+                key={chip}
+                transition={{
+                  delay: index * 0.2,
+                  duration: 2.6,
+                  ease: "easeInOut",
+                  repeat: Infinity,
+                }}
+              >
+                {chip}
+              </motion.span>
+            ))}
           </motion.div>
         </motion.div>
 
@@ -204,11 +240,12 @@ export function PublicHome() {
               Distinct experiences
             </p>
             <h2 className="mt-3 text-3xl font-semibold tracking-normal text-[#101817] sm:text-4xl">
-              The sidebar is not the architecture.
+              Every role gets a real path.
             </h2>
             <p className="mt-4 text-base leading-7 text-[#60716b]">
-              SparkHub keeps the business logic aligned with what each person is
-              actually doing, so the product can grow without a painful rewrite.
+              SparkHub gives creators, investors, mentors, and admins different
+              workspaces because each person is trying to make a different kind
+              of progress.
             </p>
           </div>
 
@@ -278,16 +315,86 @@ export function PublicHome() {
         </div>
       </section>
 
-      <footer className="border-t border-[#ded7ca] bg-[#f6f3ed] px-5 py-8 sm:px-8">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 text-sm text-[#60716b] sm:flex-row sm:items-center sm:justify-between">
-          <span className="font-semibold text-[#101817]">SparkHub</span>
-          <div className="flex flex-wrap gap-4">
-            {navItems.map((item) => (
-              <Link className="hover:text-[#1f7a5a]" href={item.href} key={item.href}>
-                {item.label}
-              </Link>
-            ))}
+      <footer className="border-t border-[#ded7ca] bg-[#f6f3ed] px-5 py-10 sm:px-8">
+        <div className="mx-auto grid max-w-7xl gap-8 text-sm text-[#60716b] md:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr]">
+          <div>
+            <Link
+              className="inline-flex items-center gap-2 text-lg font-semibold text-[#101817]"
+              href="/"
+            >
+              <span className="grid size-9 place-items-center rounded-lg bg-[#1f7a5a] text-white">
+                <Sparkles aria-hidden="true" size={18} />
+              </span>
+              SparkHub
+            </Link>
+            <p className="mt-4 max-w-sm leading-6">
+              A demo platform for turning early ideas into clearer discovery,
+              interest, and connection workflows.
+            </p>
+            <p className="mt-4 inline-flex items-center gap-2 text-[#40554f]">
+              <MapPin aria-hidden="true" size={16} />
+              Demo location: New Delhi, India
+            </p>
           </div>
+
+          <div>
+            <h2 className="font-semibold text-[#101817]">Product</h2>
+            <div className="mt-4 grid gap-3">
+              {navItems.map((item) => (
+                <Link
+                  className="transition hover:text-[#1f7a5a]"
+                  href={item.href}
+                  key={item.href}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <h2 className="font-semibold text-[#101817]">Account</h2>
+            <div className="mt-4 grid gap-3">
+              <Link className="transition hover:text-[#1f7a5a]" href="/login">
+                Sign in
+              </Link>
+              <Link className="transition hover:text-[#1f7a5a]" href="/signup">
+                Join SparkHub
+              </Link>
+              <Link className="transition hover:text-[#1f7a5a]" href="/app">
+                Dashboard
+              </Link>
+            </div>
+          </div>
+
+          <div>
+            <h2 className="font-semibold text-[#101817]">Social</h2>
+            <div className="mt-4 flex gap-2">
+              {socialLinks.map((item) => (
+                <a
+                  aria-label={`${item.label} demo link`}
+                  className="grid size-10 place-items-center rounded-lg border border-[#cfd8d2] bg-white text-[#263b35] transition hover:border-[#1f7a5a] hover:text-[#1f7a5a]"
+                  href={item.href}
+                  key={item.label}
+                  rel="noreferrer"
+                  target="_blank"
+                  title={`${item.label} demo link`}
+                >
+                  <span aria-hidden="true" className="text-xs font-bold">
+                    {item.mark}
+                  </span>
+                </a>
+              ))}
+            </div>
+            <p className="mt-4 leading-6">
+              Contact, privacy, terms, and help center pages are planned for the
+              production launch phase.
+            </p>
+          </div>
+        </div>
+        <div className="mx-auto mt-8 flex max-w-7xl flex-col gap-3 border-t border-[#ded7ca] pt-5 text-xs text-[#60716b] sm:flex-row sm:items-center sm:justify-between">
+          <p>(c) 2026 SparkHub. All rights reserved to @aayush Kumar.</p>
+          <p>Demo build for TheSparkhub.</p>
         </div>
       </footer>
     </main>

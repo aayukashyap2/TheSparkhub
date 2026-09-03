@@ -138,6 +138,8 @@ Implementation notes:
 
 Goal: implement the safest investment-related core.
 
+Status: foundation implemented on 2026-09-04.
+
 - Create investment interest workflow with states such as interested, contacted, discussion, passed, and converted.
 - Create connection requests with pending, accepted, declined, and blocked states.
 - Add creator and investor views of the same workflow.
@@ -148,6 +150,14 @@ Exit criteria:
 - "I'm Interested" never creates an investment.
 - Both parties can track interest and connection state.
 - Private financial fields remain protected.
+
+Implementation notes:
+
+- Public idea detail pages now create `investment_interests` from investor-only server actions.
+- Existing interest cards let investors or creators request a `connection` before any investment record exists.
+- Pending connection requests can be accepted or declined by the addressee.
+- Investor and idea-poster workspaces show interest and connection state with idea titles and counterpart names instead of raw database IDs.
+- Homepage annotations from Phase 7 were addressed with shorter hero copy, subtle motion cues, clearer role copy, and a real demo footer.
 
 ## Phase 8: Notifications, Messaging, and Matching
 
