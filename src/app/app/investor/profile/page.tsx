@@ -36,7 +36,7 @@ export default async function InvestorProfilePage() {
         <h2 className="text-xl font-semibold">Profile summary</h2>
         <p className="mt-3 text-sm leading-6 text-[#60716b]">
           {investorProfile?.bio ??
-            "Investor onboarding has created the profile record. Rich profile editing comes in a later pass."}
+            "Add an investor bio so creators can understand your thesis, preferred stages, and collaboration style."}
         </p>
       </div>
     </AppShell>

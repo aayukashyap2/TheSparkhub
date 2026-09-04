@@ -76,6 +76,13 @@ const navItems = [
 
 const signalChips = ["Post", "Watch", "Connect"];
 
+const signalLines = [
+  "left-[8%] top-[28%] w-32 bg-[#1f7a5a]/35",
+  "right-[10%] top-[24%] w-44 bg-[#3157a4]/28",
+  "bottom-[26%] left-[14%] w-40 bg-[#d4912a]/35",
+  "bottom-[18%] right-[18%] w-36 bg-[#1f7a5a]/30",
+];
+
 const socialLinks = [
   { label: "GitHub", href: "https://github.com/aayukashyap2/TheSparkhub", mark: "GH" },
   { label: "LinkedIn", href: "https://www.linkedin.com/", mark: "in" },
@@ -93,9 +100,9 @@ export function PublicHome() {
   return (
     <main className="min-h-screen overflow-hidden bg-[#f6f3ed] text-[#101817]">
       <header className="absolute left-0 right-0 top-0 z-30">
-        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-5 sm:px-8">
-          <Link className="flex items-center gap-2 text-lg font-semibold" href="/">
-            <span className="grid size-9 place-items-center rounded-lg bg-[#1f7a5a] text-white">
+        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
+          <Link className="flex items-center gap-2 text-base font-semibold" href="/">
+            <span className="grid size-8 place-items-center rounded-lg bg-[#1f7a5a] text-white">
               <Sparkles aria-hidden="true" size={18} />
             </span>
             SparkHub
@@ -129,7 +136,7 @@ export function PublicHome() {
         </div>
       </header>
 
-      <section className="relative isolate min-h-[92svh] overflow-hidden">
+      <section className="relative isolate min-h-svh overflow-hidden">
         <motion.div
           animate={reduceMotion ? undefined : { scale: [1.02, 1] }}
           className="absolute inset-y-0 right-0 -z-10 w-full lg:w-[64%]"
@@ -146,10 +153,41 @@ export function PublicHome() {
           <div className="absolute inset-0 bg-[#f6f3ed]/78 lg:bg-[#f6f3ed]/28" />
           <div className="absolute inset-y-0 left-0 hidden w-2/5 bg-[#f6f3ed] lg:block" />
         </motion.div>
+        <div className="pointer-events-none absolute inset-0 -z-10">
+          {signalLines.map((line, index) => (
+            <motion.span
+              animate={
+                reduceMotion
+                  ? undefined
+                  : {
+                      opacity: [0.2, 0.72, 0.2],
+                      x: index % 2 === 0 ? [0, 22, 0] : [0, -22, 0],
+                    }
+              }
+              className={`absolute h-px ${line}`}
+              key={line}
+              transition={{
+                delay: index * 0.32,
+                duration: 3.4,
+                ease: "easeInOut",
+                repeat: Infinity,
+              }}
+            />
+          ))}
+          <motion.span
+            animate={
+              reduceMotion
+                ? undefined
+                : { opacity: [0.18, 0.42, 0.18], x: ["-20%", "20%", "-20%"] }
+            }
+            className="absolute left-0 top-[44%] h-px w-full bg-[#1f7a5a]/18"
+            transition={{ duration: 7, ease: "easeInOut", repeat: Infinity }}
+          />
+        </div>
 
         <motion.div
           animate="visible"
-          className="mx-auto flex min-h-[92svh] w-full max-w-7xl flex-col justify-end px-5 pb-8 pt-28 sm:px-8 lg:justify-center lg:pb-12"
+          className="mx-auto flex min-h-[calc(100svh-112px)] w-full max-w-7xl flex-col justify-center px-5 pb-7 pt-24 sm:px-8 lg:pb-8"
           initial="hidden"
           transition={{ staggerChildren: reduceMotion ? 0 : 0.08 }}
         >
@@ -160,13 +198,13 @@ export function PublicHome() {
             Ideas, people, momentum
           </motion.p>
           <motion.h1
-            className="mt-5 max-w-3xl text-5xl font-semibold leading-[1.02] tracking-normal text-[#101817] sm:text-6xl lg:text-7xl"
+            className="mt-5 max-w-3xl text-4xl font-semibold leading-[1.04] tracking-normal text-[#101817] sm:text-5xl lg:text-6xl"
             variants={reveal}
           >
             Where ideas find the right people.
           </motion.h1>
           <motion.p
-            className="mt-6 max-w-xl text-lg leading-8 text-[#41534d] sm:text-xl"
+            className="mt-5 max-w-xl text-base leading-7 text-[#41534d] sm:text-lg"
             variants={reveal}
           >
             Post a spark. Save what matters. Start the right conversation when
@@ -233,7 +271,7 @@ export function PublicHome() {
         </div>
       </section>
 
-      <section className="border-y border-[#ded7ca] bg-white px-5 py-16 sm:px-8">
+      <section className="border-y border-[#ded7ca] bg-white px-5 py-12 sm:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-2xl">
             <p className="text-sm font-semibold uppercase text-[#1f7a5a]">
@@ -272,7 +310,7 @@ export function PublicHome() {
         </div>
       </section>
 
-      <section className="bg-[#101817] px-5 py-16 text-white sm:px-8">
+      <section className="bg-[#101817] px-5 py-12 text-white sm:px-8">
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
           <div>
             <p className="text-sm font-semibold uppercase text-[#d4912a]">
@@ -315,23 +353,23 @@ export function PublicHome() {
         </div>
       </section>
 
-      <footer className="border-t border-[#ded7ca] bg-[#f6f3ed] px-5 py-10 sm:px-8">
-        <div className="mx-auto grid max-w-7xl gap-8 text-sm text-[#60716b] md:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr]">
+      <footer className="border-t border-[#ded7ca] bg-[#f6f3ed] px-5 py-8 sm:px-8">
+        <div className="mx-auto grid max-w-7xl gap-6 text-sm text-[#60716b] md:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr]">
           <div>
             <Link
-              className="inline-flex items-center gap-2 text-lg font-semibold text-[#101817]"
+              className="inline-flex items-center gap-2 text-base font-semibold text-[#101817]"
               href="/"
             >
-              <span className="grid size-9 place-items-center rounded-lg bg-[#1f7a5a] text-white">
+              <span className="grid size-8 place-items-center rounded-lg bg-[#1f7a5a] text-white">
                 <Sparkles aria-hidden="true" size={18} />
               </span>
               SparkHub
             </Link>
-            <p className="mt-4 max-w-sm leading-6">
+            <p className="mt-3 max-w-sm leading-6">
               A demo platform for turning early ideas into clearer discovery,
               interest, and connection workflows.
             </p>
-            <p className="mt-4 inline-flex items-center gap-2 text-[#40554f]">
+            <p className="mt-3 inline-flex items-center gap-2 text-[#40554f]">
               <MapPin aria-hidden="true" size={16} />
               Demo location: New Delhi, India
             </p>
@@ -339,7 +377,7 @@ export function PublicHome() {
 
           <div>
             <h2 className="font-semibold text-[#101817]">Product</h2>
-            <div className="mt-4 grid gap-3">
+            <div className="mt-3 grid gap-2.5">
               {navItems.map((item) => (
                 <Link
                   className="transition hover:text-[#1f7a5a]"
@@ -354,7 +392,7 @@ export function PublicHome() {
 
           <div>
             <h2 className="font-semibold text-[#101817]">Account</h2>
-            <div className="mt-4 grid gap-3">
+            <div className="mt-3 grid gap-2.5">
               <Link className="transition hover:text-[#1f7a5a]" href="/login">
                 Sign in
               </Link>
@@ -369,11 +407,11 @@ export function PublicHome() {
 
           <div>
             <h2 className="font-semibold text-[#101817]">Social</h2>
-            <div className="mt-4 flex gap-2">
+            <div className="mt-3 flex gap-2">
               {socialLinks.map((item) => (
                 <a
                   aria-label={`${item.label} demo link`}
-                  className="grid size-10 place-items-center rounded-lg border border-[#cfd8d2] bg-white text-[#263b35] transition hover:border-[#1f7a5a] hover:text-[#1f7a5a]"
+                  className="grid size-9 place-items-center rounded-lg border border-[#cfd8d2] bg-white text-[#263b35] transition hover:border-[#1f7a5a] hover:text-[#1f7a5a]"
                   href={item.href}
                   key={item.label}
                   rel="noreferrer"
@@ -386,13 +424,13 @@ export function PublicHome() {
                 </a>
               ))}
             </div>
-            <p className="mt-4 leading-6">
+            <p className="mt-3 leading-6">
               Contact, privacy, terms, and help center pages are planned for the
               production launch phase.
             </p>
           </div>
         </div>
-        <div className="mx-auto mt-8 flex max-w-7xl flex-col gap-3 border-t border-[#ded7ca] pt-5 text-xs text-[#60716b] sm:flex-row sm:items-center sm:justify-between">
+        <div className="mx-auto mt-6 flex max-w-7xl flex-col gap-3 border-t border-[#ded7ca] pt-4 text-xs text-[#60716b] sm:flex-row sm:items-center sm:justify-between">
           <p>(c) 2026 SparkHub. All rights reserved to @aayush Kumar.</p>
           <p>Demo build for TheSparkhub.</p>
         </div>

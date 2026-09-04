@@ -52,8 +52,8 @@ export default async function InvestorDashboardPage() {
           )}
         </div>
         <p className="mt-4 text-sm leading-6 text-[#60716b]">
-          Phase 6 gives investors a real workspace shape. Phase 7 will add the
-          investment interest and connection creation workflow.
+          Move from discovery to watchlist, interest, connection, and portfolio
+          only when each step has enough context.
         </p>
       </div>
     </AppShell>

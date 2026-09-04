@@ -67,8 +67,8 @@ export default async function IdeaPosterDashboardPage() {
             ))}
           </div>
           <p className="mt-4 text-sm leading-6 text-[#60716b]">
-            Phase 5 covers the idea object and engagement. Investment interests
-            remain a later, separate workflow.
+            Draft ideas, publish when ready, then read engagement and investor
+            interest as separate signals.
           </p>
         </article>
         <article className="rounded-lg border border-[#dfe5e1] bg-[#fbfcfb] p-5">

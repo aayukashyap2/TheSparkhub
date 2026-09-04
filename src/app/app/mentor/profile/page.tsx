@@ -11,7 +11,7 @@ export default async function MentorProfilePage() {
   return (
     <AppShell active="Profile" displayName={profile.display_name} role="mentor">
       <AppPageHeader
-        description="Your expertise profile will drive matching and request quality in later phases."
+        description="Your expertise profile helps founders understand where your guidance is strongest."
         eyebrow="Mentor profile"
         title="Your mentor context"
       />
@@ -36,7 +36,7 @@ export default async function MentorProfilePage() {
         <h2 className="text-xl font-semibold">Profile summary</h2>
         <p className="mt-3 text-sm leading-6 text-[#60716b]">
           {mentorProfile?.bio ??
-            "Mentor onboarding has created the profile record. Rich profile editing comes in a later pass."}
+            "Add a clear mentor bio so founders can understand your expertise, availability, and working style."}
         </p>
       </div>
     </AppShell>

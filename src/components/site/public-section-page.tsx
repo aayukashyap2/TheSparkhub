@@ -113,8 +113,8 @@ export function PublicSectionPage({
   return (
     <main className="min-h-screen bg-[#f6f3ed] text-[#101817]">
       <header className="border-b border-[#ded7ca] bg-white/76 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-5 sm:px-8">
-          <Link className="text-lg font-semibold" href="/">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
+          <Link className="text-base font-semibold" href="/">
             SparkHub
           </Link>
           <nav className="hidden items-center gap-1 md:flex">
@@ -137,12 +137,12 @@ export function PublicSectionPage({
         </div>
       </header>
 
-      <section className="mx-auto grid max-w-7xl gap-10 px-5 py-16 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:py-24">
+      <section className="mx-auto grid max-w-7xl gap-8 px-5 py-10 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:py-14">
         <div>
           <p className="text-sm font-semibold uppercase text-[#1f7a5a]">
             {eyebrow}
           </p>
-          <h1 className="mt-4 text-4xl font-semibold leading-tight tracking-normal sm:text-5xl">
+          <h1 className="mt-4 max-w-3xl text-3xl font-semibold leading-tight tracking-normal sm:text-4xl">
             {title}
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-7 text-[#60716b]">

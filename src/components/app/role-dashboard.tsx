@@ -68,8 +68,8 @@ export function RoleDashboard({ role, displayName }: RoleDashboardProps) {
                   {item.label}
                 </h2>
                 <p className="mt-2 text-sm leading-6 text-[#64736e]">
-                  Phase 3 wires access and identity. This workflow receives
-                  database-backed features in the upcoming product phases.
+                  Open this workspace to manage the records, signals, and
+                  conversations connected to your role.
                 </p>
               </article>
             ))}
